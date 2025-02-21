@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: OpenIddict Interactive Login Serverless Demo
+
+Parameters:
+  DistributionArn:
+    Type: String
+    Description: The ARN of the CloudFront distribution to allow access to the bucket
+    Default: ''
+
+Conditions:
+  HasDistributionArn: !Not [!Equals [!Ref DistributionArn, '']]
+
+Resources:
+  LoginWeb:
+    Type: AWS::S3::Bucket
+
+  LoginWebPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Condition: HasDistributionArn
+    Properties:
+      Bucket: !Ref LoginWeb
+      PolicyDocument:
+        Statement:
+          - Action: 's3:GetObject'
+            Resource: !Sub '${LoginWeb.Arn}/*'
+            Principal:
+              Service: 'cloudfront.amazonaws.com'
+            Effect: 'Allow'
+
+Outputs:
+  LoginWebBucketName:
+    Description: "The name of the LoginWeb S3 bucket"
+    Value: !Ref LoginWeb
