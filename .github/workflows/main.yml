@@ -1,0 +1,48 @@
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-north-1
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: ${{ vars.DEPLOY_ROLE }}
+          role-session-name: OIDCSession
+      - run: sam build
+      - run: |
+          sam deploy \
+            --no-fail-on-empty-changeset \
+            --stack-name openiddict-serverless-web-demo \
+            --parameter-overrides DistributionArn=${{ vars.DISTRIBUTION_ARN }} \
+            --resolve-s3 \
+            --capabilities CAPABILITY_IAM
+      - id: get-bucket-name
+        run: |
+          OUTPUT=$(aws cloudformation describe-stacks \
+            --stack-name openiddict-serverless-web-demo \
+            --query "Stacks[0].Outputs[?OutputKey=='LoginWebBucketName'].OutputValue" \
+            --output text)
+          echo "BUCKET_NAME=$OUTPUT" >> $GITHUB_ENV
+      - name: Upload to S3
+        run: aws s3 sync ./dist s3://${{ env.BUCKET_NAME }}
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
