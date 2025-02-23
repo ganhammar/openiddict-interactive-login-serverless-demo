@@ -1,9 +1,9 @@
-import { use, useState } from 'react';
-import { Box, Flex, Heading } from '@radix-ui/themes';
-import styled from 'styled-components';
-import User from './Types/User';
-import Login from './Components/Login';
-import Profile from './Components/Profile';
+import { use, useState } from "react";
+import { Box, Flex, Heading } from "@radix-ui/themes";
+import styled from "styled-components";
+import User from "./Types/User";
+import Login from "./Components/Login";
+import Profile from "./Components/Profile";
 
 const MainBox = styled(Box)`
   background-color: ${({ theme }) => theme.colors.gray1};
@@ -18,7 +18,7 @@ const MainHeading = styled(Heading)`
 `;
 
 const checkUser = async (): Promise<User | null> => {
-  const res = await fetch('/api/user/current');
+  const res = await fetch("/api/user/current");
 
   if (res.ok) {
     return await res.json();
@@ -36,12 +36,16 @@ function App() {
     updatePromise(checkUser());
   };
 
-  return (
-    <Main loadingPromise={promise} update={update} />
-  );
+  return <Main loadingPromise={promise} update={update} />;
 }
 
-function Main({ loadingPromise, update }: { loadingPromise: Promise<User | null>, update: () => void }) {
+function Main({
+  loadingPromise,
+  update,
+}: {
+  loadingPromise: Promise<User | null>;
+  update: () => void;
+}) {
   const user = use<User | null>(loadingPromise);
 
   return (

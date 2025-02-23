@@ -7,7 +7,9 @@ function Profile({ user: { userName, email } }: { user: User }) {
 
   return (
     <Box>
-      <Text weight="medium" size="4">Welcome back, {ucFirst(userName)}!</Text>
+      <Text weight="medium" size="4">
+        Welcome back, {ucFirst(userName)}!
+      </Text>
       <Box my="4">
         <Label.Root>Email</Label.Root>
         <TextField.Root type="email" disabled value={email}></TextField.Root>
