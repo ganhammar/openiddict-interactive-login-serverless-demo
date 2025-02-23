@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { Label } from "radix-ui";
-import User from "../Types/User";
+import { User } from "../types/user";
 
 function Profile({ user: { userName, email } }: { user: User }) {
   const ucFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
