@@ -1,8 +1,8 @@
 import { use, useState } from "react";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import styled from "styled-components";
-import Login from "./Components/Login";
-import Profile from "./Components/Profile";
+import { Login } from "./Components/Login";
+import { Profile } from "./Components/Profile";
 import { checkUser } from "./utils/checkUser";
 
 const MainBox = styled(Box)`
@@ -19,7 +19,7 @@ const MainHeading = styled(Heading)`
 
 const checkUserPromise = checkUser();
 
-function App() {
+export function App() {
   const [promise, updatePromise] = useState(checkUserPromise);
   const user = use(promise);
 
@@ -36,5 +36,3 @@ function App() {
     </MainBox>
   );
 }
-
-export default App;

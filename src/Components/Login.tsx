@@ -1,8 +1,8 @@
 import { useActionState } from "react";
 import { Form } from "radix-ui";
-import { Box, Button, TextField, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, TextField, Flex, Text, Callout } from "@radix-ui/themes";
 
-function Login({ onLogin }: { onLogin: () => void }) {
+export function Login({ onLogin }: { onLogin: () => void }) {
   const [result, onSubmit, isPending] = useActionState(
     async (_: Record<string, string>, formData: FormData) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -17,7 +17,7 @@ function Login({ onLogin }: { onLogin: () => void }) {
 
       if (!response.ok) {
         return {
-          error: `Something went wrong, please try again (${response.statusText})`,
+          error: `Oops! (Status: ${response.statusText})`,
         };
       }
 
@@ -58,10 +58,10 @@ function Login({ onLogin }: { onLogin: () => void }) {
           </Form.Control>
         </Form.Field>
       </Box>
-      {result && (
-        <Box mb="4">
-          <pre>{JSON.stringify(result)}</pre>
-        </Box>
+      {result?.error && (
+        <Callout.Root color="red" mb="4">
+          <Callout.Text>{result.error}</Callout.Text>
+        </Callout.Root>
       )}
       <Flex justify="end">
         <Form.Submit asChild>
@@ -71,5 +71,3 @@ function Login({ onLogin }: { onLogin: () => void }) {
     </Form.Root>
   );
 }
-
-export default Login;

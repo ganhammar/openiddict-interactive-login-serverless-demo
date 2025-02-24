@@ -1,6 +1,6 @@
 import { Suspense, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import { App } from "./App.tsx";
 import { gray } from "@radix-ui/colors";
 import { ThemeProvider } from "styled-components";
 
